@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mariadb:10.5.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ef3e597c3effdacfbee881dab45db291128689e4
+      MYSQL_USER: os1r1s
+      MYSQL_PASSWORD: ef3e597c3effdacfbee881dab45db291128689e4
+      MYSQL_DATABASE: osiris
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/var/lib/mysql
+
+  adminer:
+    image: adminer:4.7.7
+    restart: always
+    ports:
+      - 3000:8080
+    depends_on:
+      - db
+  
+  back-end:
+    build:
+      context: back-end/
+      dockerfile: build.Dockerfile
+    environment:
+      - spring.datasource.url=jdbc:mariadb://db:3306/osiris?useSSL=false&allowPublicKeyRetrieval=true
+      - spring.datasource.username=os1r1s
+      - spring.datasource.password=ef3e597c3effdacfbee881dab45db291128689e4
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  db:
