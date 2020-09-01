@@ -2,10 +2,12 @@
 #include <LittleFS.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
 #include <DHT_U.h>
 #include <DHT.h>
 
 #define CONF_PATH "/conf.txt"
+#define MDNS_DOMAIN "osiris"
 #define DHT_PIN D2
 #define DHT_TYPE DHT11
 #define LDR_PIN A0
@@ -59,6 +61,7 @@ void fsConfig()
 
 void wifiConfig(String ssid, String pass)
 {
+  WiFi.mode( WIFI_STA );
   WiFi.begin(ssid, pass);
 
   int i = 0;
@@ -94,6 +97,18 @@ void serverConfig()
   server.begin();
 
   Serial.println("Server Started!");
+
+  if( MDNS.begin( MDNS_DOMAIN ) )
+  {
+    MDNS.addService("http", "tcp", 80);
+
+    Serial.println( "MDNS Started: " + String( MDNS_DOMAIN ) );
+  }
+
+  else
+  {
+    Serial.println( "MDNS error" );
+  }
 }
 
 void loadConfig()
@@ -123,7 +138,7 @@ void setup()
   pinMode(LDR_PIN, INPUT);
 
   pinMode(LED_BUILTIN, OUTPUT);
-
+  
   Serial.begin(9600);
 
   Serial.println("\n");
@@ -135,10 +150,14 @@ void setup()
   serverConfig();
 
   dht.begin();
+
+  digitalWrite( LED_BUILTIN, HIGH );
 }
 
 void loop()
 {
+  MDNS.update();
+
   sensors_event_t tem;
   sensors_event_t hum;
 
