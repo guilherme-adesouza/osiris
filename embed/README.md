@@ -1,4 +1,4 @@
-# Embed sistem documentation :godmode:
+# Embed sistem documentation
 
 ## **Board used: NODEMCU ESP8266**
 
@@ -22,3 +22,5 @@ but some networks may not suport this feature.
 [POST]
 /api/water/on/ -> Turns the water pump ON
 /api/water/off/ -> Turns the water pump OFF
+
+:godmode:
