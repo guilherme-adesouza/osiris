@@ -16,11 +16,9 @@ but some networks may not suport this feature.
 
 ## Routes:
 
-[GET]
-/api/sensors/ -> Returns a JSON containing all the sensor data
+[GET]/api/sensors/ -> Returns a JSON containing all the sensor data
 
-[POST]
-/api/water/on/ -> Turns the water pump ON
-/api/water/off/ -> Turns the water pump OFF
+[POST]/api/water/on/ -> Turns the water pump ON
+[POST]/api/water/off/ -> Turns the water pump OFF
 
 :godmode:
