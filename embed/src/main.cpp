@@ -1,10 +1,9 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-#include <ESP8266mDNS.h>
 #include <DHT_U.h>
 #include <DHT.h>
+#include <ESP8266HTTPClient.h>
 
 #define CONF_PATH "/conf.txt"
 #define MDNS_DOMAIN "osiris"
@@ -16,27 +15,15 @@
 #define SERVER_PORT 80
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
-ESP8266WebServer server(SERVER_PORT);
+
+String server;
+String port;
 
 float temperature = 0;
 float humidity = 0;
 float luminosity = 0;
 boolean waterHigh = false;
 boolean waterLow = false;
-
-void onSensors()
-{
-  server.send
-  (
-    200, 
-    "application/json", 
-    "{ \"temperature\":" + String(temperature) + "," +
-      "\"humidity\":"    + String(humidity)    + "," +
-      "\"luminosity\":"  + String(luminosity)  + "," +
-      "\"waterHigh\":"   + String(waterHigh)   + "," +
-      "\"waterLow\":"    + String(waterLow)    + " }"
-    );
-}
 
 void fsConfig()
 {
@@ -80,27 +67,6 @@ void wifiConfig(String ssid, String pass)
   }
 }
 
-void serverConfig()
-{
-  server.on("/api/sensors", HTTP_GET, onSensors);
-
-  server.begin();
-
-  Serial.println("Server Started!");
-
-  if( MDNS.begin( MDNS_DOMAIN ) )
-  {
-    MDNS.addService("http", "tcp", 80);
-
-    Serial.println( "MDNS Started: " + String( MDNS_DOMAIN ) );
-  }
-
-  else
-  {
-    Serial.println( "MDNS error" );
-  }
-}
-
 void loadConfig()
 {
   if (LittleFS.exists(CONF_PATH))
@@ -111,6 +77,8 @@ void loadConfig()
 
     String ssid = conf.readStringUntil(';');
     String pass = conf.readStringUntil(';');
+    String server = conf.readStringUntil( ';' );
+    String port = conf.readStringUntil( ';' );
 
     conf.close();
 
@@ -139,8 +107,6 @@ void setup()
 
   loadConfig();
 
-  serverConfig();
-
   dht.begin();
 
   digitalWrite( LED_BUILTIN, HIGH );
@@ -148,10 +114,6 @@ void setup()
 
 void loop()
 {
-  MDNS.update();
-
-  server.handleClient();
-
   sensors_event_t tem;
   sensors_event_t hum;
 
@@ -166,5 +128,16 @@ void loop()
   waterHigh = digitalRead( WATER_HIGH_PIN );
   waterLow = digitalRead( WATER_LOW_PIN );
   
-  delay(10);
+  HTTPClient http;
+  WiFiClient client;
+
+  http.begin( client, server + ":" + port );
+
+  int code = http.GET();
+
+  Serial.println( "code " + String( code ) + " resp " + http.getString() );
+
+  http.end();
+
+  delay(1000);
 }
