@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("action")
+@RequestMapping("data")
 public class DataController extends BaseCRUDController<Data> {
 
     @Autowired
