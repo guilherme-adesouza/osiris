@@ -25,7 +25,7 @@ services:
   
   back-end:
     build:
-      context: back-end/
+      context: .
       dockerfile: build.Dockerfile
     environment:
       - spring.datasource.url=jdbc:mariadb://db:3306/osiris?useSSL=false&allowPublicKeyRetrieval=true
