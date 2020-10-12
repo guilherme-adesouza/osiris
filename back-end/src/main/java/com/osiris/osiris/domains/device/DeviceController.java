@@ -16,6 +16,7 @@ public class DeviceController extends BaseCRUDController<Device> {
 
     @Override
     public void applyChanges(Device device, Device request) {
-        device.setId(request.getId());
+        device.setDisplayName(request.getDisplayName());
+        device.setMacAddress(request.getMacAddress());
     }
 }

@@ -16,6 +16,11 @@ public class ScheduleController extends BaseCRUDController<Schedule> {
 
     @Override
     public void applyChanges(Schedule schedule, Schedule request) {
-        schedule.setId(request.getId());
+        schedule.setDevice(request.getDevice());
+        schedule.setCron(request.getCron());
+        schedule.setDescription(request.getDescription());
+        if (request.isActive() != null) {
+            schedule.setActive(request.isActive());
+        }
     }
 }

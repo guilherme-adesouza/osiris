@@ -14,11 +14,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column
+    private String login;
     @Column(columnDefinition = "text")
     private String password;
     @Column(name = "mobile_id")
     private String mobileId;
-    @ManyToMany(targetEntity = Device.class)
+    @ManyToMany(targetEntity = Device.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_has_embedded",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -59,5 +61,13 @@ public class User {
 
     public void setDeviceList(List<Device> deviceList) {
         this.deviceList = deviceList;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }

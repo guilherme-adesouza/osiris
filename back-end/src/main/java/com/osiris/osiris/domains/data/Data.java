@@ -27,4 +27,27 @@ public class Data {
         this.id = id;
     }
 
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
+
+    public double getLuminosity() {
+        return luminosity;
+    }
+
+    public void setLuminosity(double luminosity) {
+        this.luminosity = luminosity;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
+    }
 }

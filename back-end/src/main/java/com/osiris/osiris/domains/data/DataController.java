@@ -16,6 +16,8 @@ public class DataController extends BaseCRUDController<Data> {
 
     @Override
     public void applyChanges(Data data, Data request) {
-        data.setId(request.getId());
+        data.setDevice(request.getDevice());
+        data.setHumidity(request.getHumidity());
+        data.setLuminosity(request.getLuminosity());
     }
 }

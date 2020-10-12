@@ -16,6 +16,8 @@ public class UserController extends BaseCRUDController<User> {
 
     @Override
     public void applyChanges(User user, User request) {
-        user.setId(request.getId());
+        user.setLogin(request.getLogin());
+        user.setPassword(request.getPassword());
+        user.setMobileId(request.getMobileId());
     }
 }

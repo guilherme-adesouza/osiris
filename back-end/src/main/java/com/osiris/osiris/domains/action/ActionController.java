@@ -16,6 +16,7 @@ public class ActionController extends BaseCRUDController<Action> {
 
     @Override
     public void applyChanges(Action action, Action request) {
-        action.setId(request.getId());
+        action.setSchedule(request.getSchedule());
+        action.setData(request.getData());
     }
 }
