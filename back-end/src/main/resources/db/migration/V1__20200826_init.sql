@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `cron` VARCHAR(45) NOT NULL,
   `description` VARCHAR(45) NULL,
   `embedded_id` BIGINT UNSIGNED NOT NULL,
-  `active` TINYINT NOT NULL,
+  `active` BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_schedule_embedded1_idx` (`embedded_id` ASC) VISIBLE,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
