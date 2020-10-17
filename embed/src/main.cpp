@@ -12,7 +12,9 @@
 #define WATER_HIGH_PIN D7
 #define WATER_LOW_PIN D6
 #define DHT_PIN D2
-#define MULTIPLEXER_PIN D0
+#define MULTIPLEXER_PIN_S0 D0
+#define MULTIPLEXER_PIN_S1 D1
+#define MULTIPLEXER_PIN_S2 D3
 
 #define DHT_TYPE DHT11
 
@@ -128,12 +130,16 @@ void onRoot()
 
 void multiplexerLdr()
 {
-  digitalWrite( MULTIPLEXER_PIN, HIGH );
+  digitalWrite( MULTIPLEXER_PIN_S0, HIGH );
+  digitalWrite( MULTIPLEXER_PIN_S1, LOW );
+  digitalWrite( MULTIPLEXER_PIN_S2, LOW );
 }
 
 void multiplexerSoil()
 {
-  digitalWrite( MULTIPLEXER_PIN, LOW );
+  digitalWrite( MULTIPLEXER_PIN_S0, LOW );
+  digitalWrite( MULTIPLEXER_PIN_S1, LOW );
+  digitalWrite( MULTIPLEXER_PIN_S2, LOW );
 }
 
 void handleSensors()
@@ -183,7 +189,9 @@ void setup()
   pinMode(WATER_HIGH_PIN, INPUT);
   pinMode(WATER_LOW_PIN, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(MULTIPLEXER_PIN,OUTPUT);
+  pinMode(MULTIPLEXER_PIN_S0,OUTPUT);
+  pinMode(MULTIPLEXER_PIN_S1,OUTPUT);
+  pinMode(MULTIPLEXER_PIN_S2,OUTPUT);
 
   serialConfig();
 
@@ -198,7 +206,7 @@ void setup()
 
   webServer.begin();
 
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop()
