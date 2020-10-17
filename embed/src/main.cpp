@@ -7,15 +7,16 @@
 #include <ESP8266WebServer.h>
 
 #define CONFIG_PATH "/conf.txt"
-#define CONFIG_BUTTON D3
-#define LDR_PIN A0
+
+#define ANALOG_PIN A0
 #define WATER_HIGH_PIN D7
 #define WATER_LOW_PIN D6
 #define DHT_PIN D2
+#define MULTIPLEXER_PIN D0
+
 #define DHT_TYPE DHT11
+
 #define SERVER_PORT 80
-#define DEFAUT_MODE 0
-#define CONFIG_MODE 1
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
 
@@ -27,11 +28,10 @@ ESP8266WebServer webServer(SERVER_PORT);
 String ssid;
 String pass;
 
-int mode = DEFAUT_MODE;
-
 float temperature = 0;
 float humidity = 0;
 float luminosity = 0;
+float soil = 0;
 boolean waterHigh = false;
 boolean waterLow = false;
 
@@ -55,11 +55,37 @@ void fsConfig()
   }
 }
 
+void wifiConfig()
+{
+  WiFi.begin( ssid, pass );
+
+  int i = 0;
+
+  while ( !WiFi.isConnected() && i < 10 )
+  {
+    Serial.print(".");
+
+    delay(1000);
+
+    i++;
+  }
+
+  if( WiFi.isConnected() )
+  {
+    Serial.println( "Wifi conected to: " + ssid );
+  }
+
+  else
+  {
+    Serial.println( "Connection Error!" );
+  }
+}
+
 void loadConfig()
 {
   if (LittleFS.exists(CONFIG_PATH))
   {
-    Serial.println("Config file found");
+    Serial.println("Configuration file found");
 
     File conf = LittleFS.open(CONFIG_PATH, "r");
 
@@ -73,17 +99,8 @@ void loadConfig()
 
   else
   {
-    Serial.println("No config file found");
-
-    mode = CONFIG_MODE;
+    Serial.println("No configuration file found");
   }
-}
-
-ICACHE_RAM_ATTR
-void configButon()
-{
-  Serial.println("Button Pressed! -> Config Mode");
-  mode = CONFIG_MODE;
 }
 
 void onForm()
@@ -101,12 +118,22 @@ void onForm()
 
   file.close();
 
-  mode = DEFAUT_MODE;
+  wifiConfig();
 }
 
 void onRoot()
 {
   webServer.send(200, "text/html", "<body><form style='display:inline-grid' action='/form' method='post'>ssid:<input type='text' name='ssid'>pass:<input type='text' name='pass'><button>Save</button></form></body>");
+}
+
+void multiplexerLdr()
+{
+  digitalWrite( MULTIPLEXER_PIN, HIGH );
+}
+
+void multiplexerSoil()
+{
+  digitalWrite( MULTIPLEXER_PIN, LOW );
 }
 
 void handleSensors()
@@ -120,7 +147,11 @@ void handleSensors()
   temperature = tem.temperature;
   humidity = hum.relative_humidity;
 
-  luminosity = analogRead(LDR_PIN);
+  multiplexerLdr();
+  luminosity = analogRead(ANALOG_PIN);
+
+  multiplexerSoil();
+  soil = analogRead( ANALOG_PIN );
 
   waterHigh = digitalRead(WATER_HIGH_PIN);
   waterLow = digitalRead(WATER_LOW_PIN);
@@ -139,23 +170,20 @@ void handleSensors()
   Serial.println("temperature: " + String(temperature) + "\n" +
                  "humidity: " + String(humidity) + "\n" +
                  "luminosity: " + String(luminosity) + "\n" +
+                 "soil: " + String(soil) + "\n" +
                  "water high: " + String(waterHigh) + "\n" +
                  "water low: " + String(waterLow));
 
   http.end();
-
-  delay(1000);
 }
 
 void setup()
 {
-  pinMode(LDR_PIN, INPUT);
+  pinMode(ANALOG_PIN, INPUT);
   pinMode(WATER_HIGH_PIN, INPUT);
   pinMode(WATER_LOW_PIN, INPUT);
-  pinMode(CONFIG_BUTTON, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
-
-  attachInterrupt(digitalPinToInterrupt(CONFIG_BUTTON), configButon, FALLING);
+  pinMode(MULTIPLEXER_PIN,OUTPUT);
 
   serialConfig();
 
@@ -175,54 +203,9 @@ void setup()
 
 void loop()
 {
-  if (mode == CONFIG_MODE)
-  {
-    digitalWrite(LED_BUILTIN, LOW);
+  webServer.handleClient();
 
-    WiFi.begin();
+  handleSensors();
 
-    Serial.println("Config Mode -> IP: " + WiFi.softAPIP().toString());
-
-    while (mode == CONFIG_MODE)
-    {
-      webServer.handleClient();
-    }
-  }
-
-  else
-  {
-    digitalWrite(LED_BUILTIN, HIGH);
-
-    WiFi.begin(ssid, pass);
-
-    int i = 0;
-
-    while (mode == DEFAUT_MODE && !WiFi.isConnected())
-    {
-      Serial.print(".");
-
-      delay(1000);
-
-      if (i >= 10)
-      {
-        mode = CONFIG_MODE;
-      }
-
-      i++;
-    }
-
-    if (mode == CONFIG_MODE)
-    {
-      Serial.println("Timeout on connect to Wifi!");
-    }
-    else
-    {
-      Serial.println("Connected!");
-    }
-
-    while (mode == DEFAUT_MODE)
-    {
-      handleSensors();
-    }
-  }
+  delay( 1000 );
 }
