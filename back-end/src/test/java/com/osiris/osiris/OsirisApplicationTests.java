@@ -11,17 +11,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class OsirisApplicationTests {
-
-	@Autowired
-	private MockMvc mvc;
-
-	@Test
-	public void authenticationSimpleTest() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/")
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
-	}
-}
+//@SpringBootTest
+//@AutoConfigureMockMvc
+//public class OsirisApplicationTests {
+//
+//	@Autowired
+//	private MockMvc mvc;
+//
+//	@Test
+//	public void authenticationSimpleTest() throws Exception {
+//		mvc.perform(MockMvcRequestBuilders.get("/")
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(status().isOk());
+//	}
+//}
