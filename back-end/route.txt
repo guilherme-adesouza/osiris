@@ -1,0 +1,35 @@
+
+|=====================================================================================================|
+| API 	        | URL					                    	            | METODO    | AÇÃO        |
+| ----------------------------------------------------------------------------------------------------|
+| action        | localhost:8080/api/action/                    	        | GET       | SELECT ALL  |
+| action        | localhost:8080/api/action/{id}                            | GET       | SELECT ID   |
+| action        | localhost:8080/api/action/{id}                            | DELETE    | DELETE ID   |
+| action        | localhost:8080/api/action/{id}                            | PUT       | UPDATE ID   |
+| action        | localhost:8080/api/action/                                | POST      | INSERT      |
+|-----------------------------------------------------------------------------------------------------|
+| data          | localhost:8080/api/data/                    	            | GET       | SELECT ALL  |
+| data          | localhost:8080/api/data/{id}                              | GET       | SELECT ID   |
+| data          | localhost:8080/api/data/{id}                              | DELETE    | DELETE ID   |
+| data          | localhost:8080/api/data/{id}                              | PUT       | UPDATE ID   |
+| data          | localhost:8080/api/data/                                  | POST      | INSERT      |
+|-----------------------------------------------------------------------------------------------------|
+| device        | localhost:8080/api/device/                    	        | GET       | SELECT ALL  |
+| device        | localhost:8080/api/device/{id}                            | GET       | SELECT ID   |
+| device        | localhost:8080/api/device/{id}                            | DELETE    | DELETE ID   |
+| device        | localhost:8080/api/device/{id}                            | PUT       | UPDATE ID   |
+| device        | localhost:8080/api/device/                                | POST      | INSERT      |
+|-----------------------------------------------------------------------------------------------------|
+| schedule      | localhost:8080/api/schedule/                    	        | GET       | SELECT ALL  |
+| schedule      | localhost:8080/api/schedule/{id}                          | GET       | SELECT ID   |
+| schedule      | localhost:8080/api/schedule/{id}                          | DELETE    | DELETE ID   |
+| schedule      | localhost:8080/api/schedule/{id}                          | PUT       | UPDATE ID   |
+| schedule      | localhost:8080/api/schedule/                              | POST      | INSERT      |
+|-----------------------------------------------------------------------------------------------------|
+| user          | localhost:8080/api/user/                    	            | GET       | SELECT ALL  |
+| user          | localhost:8080/api/user/{id}                              | GET       | SELECT ID   |
+| user          | localhost:8080/api/user/{id}                              | DELETE    | DELETE ID   |
+| user          | localhost:8080/api/user/{id}                              | PUT       | UPDATE ID   |
+| user          | localhost:8080/api/user/                                  | POST      | INSERT      |
+|-----------------------------------------------------------------------------------------------------|
+
