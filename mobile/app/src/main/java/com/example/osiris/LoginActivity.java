@@ -4,14 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.osiris.Class.Embedded;
-
-import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
