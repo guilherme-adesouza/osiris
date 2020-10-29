@@ -3,4 +3,8 @@
     <string name="label_login_email">E-MAIL</string>
     <string name="label_login_senha">SENHA</string>
     <string name="btn_login_acessar">ACESSAR</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_irrigacoes">Irrigações</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_agendamento">Agendamento</string>
 </resources>
