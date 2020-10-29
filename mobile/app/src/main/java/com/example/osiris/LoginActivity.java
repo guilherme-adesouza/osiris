@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.os.StrictMode;
+
+import com.example.osiris.Class.ApiConnection;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,6 +22,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
+        ApiConnection.makeGet(null, ApiConnection.TABLE_USER);
 
         //referenciar componentes
         textEmail = (TextView) findViewById(R.id.text_email);
