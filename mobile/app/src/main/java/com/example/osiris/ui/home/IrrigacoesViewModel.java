@@ -11,6 +11,7 @@ public class IrrigacoesViewModel extends ViewModel {
     public IrrigacoesViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("Fragmento das irrigações");
+
     }
 
     public LiveData<String> getText() {

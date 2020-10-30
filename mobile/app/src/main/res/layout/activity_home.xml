@@ -38,7 +38,7 @@
                 android:id="@+id/spiEquipamentos"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_alignTop="@+id/textInputBrinco"
+                android:layout_alignTop="@+id/textInputEquip"
                 android:layout_alignBottom="@+id/textInputBrinco"
                 android:layout_alignParentRight="true" />
 

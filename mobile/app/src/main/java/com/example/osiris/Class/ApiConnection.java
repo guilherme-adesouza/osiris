@@ -1,7 +1,16 @@
 package com.example.osiris.Class;
 
-import android.app.Activity;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 //import com.android.volley.Request;
 //import com.android.volley.RequestQueue;
@@ -16,17 +25,6 @@ import android.util.Log;
 //import org.apache.http.client.methods.HttpGet;
 //import org.apache.http.impl.client.DefaultHttpClient;
 //import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ApiConnection {
 
@@ -86,9 +84,9 @@ public class ApiConnection {
         }
     }
 
-    public static JSONObject makeGet(String[] parametersFixed, String from) {
+    public static JSONArray makeGet(String[] parametersFixed, String from) {
         StringBuilder result = new StringBuilder();
-        JSONObject json = null;
+        JSONArray json = null;
         //Montar a URL
         String dataUrlTemp = URL + from;
         if (parametersFixed != null) {
@@ -111,8 +109,8 @@ public class ApiConnection {
             }
             //Montar o JSON
             String st_json = result.toString();
-            json = new JSONObject(st_json);
-            Log.i("RETORNO BRUTO GET => ", json.toString());
+            json = new JSONArray(st_json);
+            Log.i("RETORNO BRUTO GET => ", st_json.toString());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
