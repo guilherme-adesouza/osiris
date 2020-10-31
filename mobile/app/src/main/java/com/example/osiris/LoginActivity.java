@@ -22,6 +22,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.osiris.Class.ApiConnection;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LoginActivity extends AppCompatActivity {
 
     //declaracao de componentes
@@ -39,7 +42,26 @@ public class LoginActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        //teste do get
         ApiConnection.makeGet(null, ApiConnection.TABLE_USER);
+/*
+        //teste do put
+        JSONObject json = new JSONObject();
+        String login = "elias 2";
+        String password = "elias #########";
+        String mobileId = "123";
+        try {
+            json.put("login", login);
+            json.put("password", password);
+            json.put("mobileId", mobileId);
+            ApiConnection.makePut(ApiConnection.TABLE_USER, "2", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //teste delete
+        ApiConnection.makeDelete(ApiConnection.TABLE_USER, "4");
+*/
 
         //referenciar componentes
         textEmail = (TextView) findViewById(R.id.text_email);

@@ -35,53 +35,16 @@ public class ApiConnection {
     public final static String TABLE_SCHEDULE   = "schedule";
     public final static String TABLE_USER       = "user";
 
-    public static JSONObject makePost(String from, String indice, JSONObject jsonData) {
-        URL myUrl;
-        HttpURLConnection connection = null;
-        JSONObject json = null;
+    public static JSONObject makePost(String from, JSONObject jsonData) {
+        return make(from, null, jsonData, "POST");
+    }
 
-        //Inicio: Formando a URL
-        String urlTemp = URL + from;
-        if (indice != null) {
-            urlTemp += "/" + indice;
-        }
-        Log.i("URL DO POST => ", urlTemp);
-        //Fim: Formando a URL
+    public static JSONObject makePut(String from, String indice, JSONObject jsonData) {
+        return make(from, indice, jsonData, "PUT");
+    }
 
-        try {
-            //Estabelecer a conexão
-            myUrl = new URL(urlTemp);
-            connection = (HttpURLConnection) myUrl.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST"); // hear you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
-            connection.connect();
-            //Enviar as requisições
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(jsonData.toString());
-            wr.flush();
-            wr.close();
-            //Receber os resultados
-            InputStream is;
-            String response = connection.getResponseMessage();
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder responseOutput = new StringBuilder();
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                responseOutput.append(line);
-            }
-            br.close();
-            Log.i("RETORNO BRUTO POST => ", responseOutput.toString());
-            //Montar o JSON
-            //json = new JSONObject(responseOutput.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            return json;
-        }
+    public static JSONObject makeDelete(String from, String indice) {
+        return make(from, indice, new JSONObject(), "DELETE");
     }
 
     public static JSONArray makeGet(String[] parametersFixed, String from) {
@@ -119,4 +82,52 @@ public class ApiConnection {
 
     }
 
+    private static JSONObject make (String from, String indice, JSONObject jsonData, String method){
+        URL myUrl;
+        HttpURLConnection connection = null;
+        JSONObject json = null;
+
+        //Inicio: Formando a URL
+        String urlTemp = URL + from;
+        if (indice != null) {
+            urlTemp += "/" + indice;
+        }
+        Log.i("URL DO POST => ", urlTemp);
+        //Fim: Formando a URL
+
+        try {
+            //Estabelecer a conexão
+            myUrl = new URL(urlTemp);
+            connection = (HttpURLConnection) myUrl.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(method); // hear you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
+            connection.connect();
+            //Enviar as requisições
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            wr.writeBytes(jsonData.toString());
+            wr.flush();
+            wr.close();
+            //Receber os resultados
+            InputStream is;
+            String response = connection.getResponseMessage();
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder responseOutput = new StringBuilder();
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                responseOutput.append(line);
+            }
+            br.close();
+            Log.i("RETORNO BRUTO "+ method +" => ", responseOutput.toString());
+            //Montar o JSON
+            //json = new JSONObject(responseOutput.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            return json;
+        }
+    }
 }

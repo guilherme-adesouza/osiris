@@ -48,7 +48,7 @@ public class CadAgendamentosActivity extends AppCompatActivity {
                     jsonSchedule.put("cron", cadCron.getText().toString());
                     jsonSchedule.put("description", cadDescription.getText().toString());
 
-                    ApiConnection.makePost(ApiConnection.TABLE_SCHEDULE, null, jsonSchedule);
+                    ApiConnection.makePost(ApiConnection.TABLE_SCHEDULE, jsonSchedule);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
