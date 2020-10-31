@@ -1,4 +1,4 @@
-package com.example.osiris.ui.home;
+package com.example.osiris.ui.agendamentos;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

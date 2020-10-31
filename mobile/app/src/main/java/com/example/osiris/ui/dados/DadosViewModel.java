@@ -1,4 +1,4 @@
-package com.example.osiris.ui.notifications;
+package com.example.osiris.ui.dados;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -1,4 +1,4 @@
-package com.example.osiris.ui.home;
+package com.example.osiris.ui.agendamentos;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

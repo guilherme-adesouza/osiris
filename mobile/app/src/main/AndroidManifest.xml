@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Listagens.ListaAgendamentosActivity"
+            android:label="@string/title_activity_lista_agendamentos"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.actions"
