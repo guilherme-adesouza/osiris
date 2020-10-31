@@ -33,11 +33,12 @@ public class DadosFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        //inicializa componentes básicos
         dadosViewModel = ViewModelProviders.of(this).get(DadosViewModel.class);
         View root = inflater.inflate(R.layout.fragment_dados, container, false);
         recyclerDados = root.findViewById(R.id.recyclerDados);
 
-
+        //inicializa e vincula os componentes do recycler e adapater dos dados
         try {
             recyclerDados.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerDados.setHasFixedSize(true);
@@ -47,9 +48,9 @@ public class DadosFragment extends Fragment {
             e.printStackTrace();
         }
 
+        //consulta dos agendamentos cadastrados e adição a lista
         JSONArray dados = ApiConnection.makeGet(null, ApiConnection.TABLE_DATA);
         listaDados.clear();
-
         try {
             for (int i = 0; i < dados.length(); i++) {
                 JSONObject jsonObject = dados.getJSONObject(i);
@@ -63,14 +64,13 @@ public class DadosFragment extends Fragment {
             e.printStackTrace();
         }
 
+        //notifica a mudança para carregar novamente o addapter
         Collections.reverse(listaDados);
         adapterDados.notifyDataSetChanged();
-        //final TextView textView = root.findViewById(R.id.text_notifications);
 
         dadosViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                //textView.setText(s);
             }
         });
         return root;

@@ -46,14 +46,16 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //recebendo os dados do deviceId
         Intent intent = getIntent();
         deviceId = intent.getStringExtra("deviceId");
 
+        //inicializando os componentes
         context = ListaAgendamentosActivity.this;
-
         revListaAgendamentos = findViewById(R.id.revListaPesagens);
-
         fabCadAgendamento = findViewById(R.id.fabListaAgendamentos);
+
+
         fabCadAgendamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +65,7 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
             }
         });
 
+        //deixando o botão bonito (se esconde quando a tela é rolada)
         revListaAgendamentos.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -144,6 +147,7 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
     private void atualizarAgendamentos(){
         try{
 
+            //busca os agendamentos e adiciona a lista
             listaAgendamentos.clear();
             JSONArray agendamentos = ApiConnection.makeGet(null, ApiConnection.TABLE_SCHEDULE);
             try {
@@ -160,6 +164,7 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            //após a busca, vincula os agendamentos ao recycler para mostrar todos
             AdapterAgendamentos adapter = new AdapterAgendamentos(listaAgendamentos, context);
             revListaAgendamentos.setAdapter(adapter);
             revListaAgendamentos.setHasFixedSize(true);

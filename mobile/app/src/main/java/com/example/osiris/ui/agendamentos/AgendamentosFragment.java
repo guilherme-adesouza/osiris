@@ -33,11 +33,12 @@ public class AgendamentosFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
+        //inicializa componentes básicos
         agendamentosViewModel = ViewModelProviders.of(this).get(AgendmaneotsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_agendamentos, container, false);
         recyclerAgendamentos = root.findViewById(R.id.recyclerAgendamentos);
 
-
+        //inicializa e vincula os componentes do recycler e adapater dos equipamentos
         try {
             recyclerAgendamentos.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerAgendamentos.setHasFixedSize(true);
@@ -47,9 +48,9 @@ public class AgendamentosFragment extends Fragment {
             e.printStackTrace();
         }
 
+        //consulta dos agendamentos cadastrados e adição a lista
         JSONArray agendamentos = ApiConnection.makeGet(null, ApiConnection.TABLE_SCHEDULE);
         listaAgendamentos.clear();
-
         try {
             for (int i = 0; i < agendamentos.length(); i++) {
                 JSONObject jsonObject = agendamentos.getJSONObject(i);
@@ -63,7 +64,8 @@ public class AgendamentosFragment extends Fragment {
             e.printStackTrace();
         }
 
-        Collections.reverse( listaAgendamentos );
+        //notifica a mudança para carregar novamente o addapter
+        Collections.reverse(listaAgendamentos);
         adapterAgendamentos.notifyDataSetChanged();
 
 

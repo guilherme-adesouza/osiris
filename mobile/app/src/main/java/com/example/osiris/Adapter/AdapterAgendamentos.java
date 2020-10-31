@@ -63,5 +63,4 @@ public class AdapterAgendamentos extends RecyclerView.Adapter<AdapterAgendamento
 
         }
     }
-
 }

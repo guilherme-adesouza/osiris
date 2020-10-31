@@ -38,8 +38,13 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        JSONArray dispositivos = ApiConnection.makeGet(null, ApiConnection.TABLE_DEVICE);
+        //inicalização dos componentes
+        spiEquipamento = findViewById(R.id.spiEquipamentos);
+        btnEntrar = findViewById(R.id.btnEntrar_Equipamento);
+        context = HomeActivity.this;
 
+        //consulta dos equipamentos cadastrados e adição a lista
+        JSONArray dispositivos = ApiConnection.makeGet(null, ApiConnection.TABLE_DEVICE);
         try {
             for (int i = 0; i < dispositivos.length(); i++) {
                 JSONObject jsonObject = dispositivos.getJSONObject(i);
@@ -54,33 +59,26 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        spiEquipamento = findViewById(R.id.spiEquipamentos);
-        btnEntrar = findViewById(R.id.btnEntrar_Equipamento);
-
-        context = HomeActivity.this;
-
+        //adição da lista de componentes ao Spinner (Equipamento possui o metodo toString que retorna o nome, que automaticamente fica como show na lista)
         try{
-
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listaEquipamentos);
             spiEquipamento.setAdapter(adapter);
-
         }catch (Exception e) {
             Toast.makeText(context,  e.getMessage(), Toast.LENGTH_LONG);
         }
 
-        //Função da combo Bairro
+        //Função da combo Equipamento para setar o equipamento selecionado
         spiEquipamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int posicao, long id) {
                 equipamento = (Equipamento) parent.getSelectedItem();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
+        //Inicia a Main com o deviceId enviado junto.
         btnEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

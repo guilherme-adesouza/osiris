@@ -46,12 +46,14 @@ public class CadAgendamentosActivity extends AppCompatActivity {
 
         inicializarComponentes();
 
+        //recebendo o deviceId para cadastro e o id para alteração.
         Intent intent = getIntent();
         deviceId = intent.getStringExtra("deviceId");
         id = intent.getStringExtra("id");
 
 
         try {
+            //se possuí id, então temos que buscar os dados e considerar como alteração
             if (id != null) {
                 String[] string = new String[1];
                 string[0] = id;
@@ -74,6 +76,7 @@ public class CadAgendamentosActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 try {
+                    //possuindo id, é uma alteração
                     if (id != null) {
                         jsonDevice.put("id", deviceId);
                         jsonSchedule = new JSONObject();
@@ -88,6 +91,7 @@ public class CadAgendamentosActivity extends AppCompatActivity {
                             finish();
                         }
                     } else {
+                        //sem id é uma inclusão
                         jsonDevice.put("id", deviceId);
                         jsonSchedule = new JSONObject();
                         jsonSchedule.put("device", jsonDevice);

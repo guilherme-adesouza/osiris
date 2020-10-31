@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
+        //recebendo o deviceID
         Intent intent = getIntent();
         deviceId = intent.getStringExtra("deviceId");
 
@@ -31,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_agendamentos, R.id.navigation_dados, R.id.navigation_dashboard).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
-
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        //seleciona o menu em cima, da direita
         switch (item.getItemId()){
             case R.id.menu_agendamentos :
                 Intent agendamentos = new Intent(getApplicationContext(), ListaAgendamentosActivity.class);
