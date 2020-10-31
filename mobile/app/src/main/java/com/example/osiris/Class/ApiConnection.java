@@ -73,7 +73,7 @@ public class ApiConnection {
             br.close();
             Log.i("RETORNO BRUTO POST => ", responseOutput.toString());
             //Montar o JSON
-            json = new JSONObject(responseOutput.toString());
+            //json = new JSONObject(responseOutput.toString());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

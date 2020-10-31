@@ -14,6 +14,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Cadastros.CadAgendamentosActivity"
+            android:label="@string/title_activity_cad_agendamentos"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".Listagens.ListaAgendamentosActivity"
             android:label="@string/title_activity_lista_agendamentos"
             android:theme="@style/AppTheme.NoActionBar" />

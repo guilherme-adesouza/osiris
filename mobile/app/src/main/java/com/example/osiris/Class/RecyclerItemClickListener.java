@@ -1,4 +1,4 @@
-package com.example.osiris.Helpers;
+package com.example.osiris.Class;
 
 import android.content.Context;
 import android.view.GestureDetector;

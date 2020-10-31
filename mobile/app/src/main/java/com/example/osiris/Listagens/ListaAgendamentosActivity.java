@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.osiris.Adapter.AdapterAgendamentos;
+import com.example.osiris.Cadastros.CadAgendamentosActivity;
 import com.example.osiris.Class.ApiConnection;
-import com.example.osiris.Helpers.RecyclerItemClickListener;
+import com.example.osiris.Class.RecyclerItemClickListener;
 import com.example.osiris.Models.Agendamento;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -111,6 +112,7 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
     private void atualizarAgendamentos(){
         try{
 
+            listaAgendamentos.clear();
             JSONArray agendamentos = ApiConnection.makeGet(null, ApiConnection.TABLE_SCHEDULE);
             try {
                 for (int i = 0; i < agendamentos.length(); i++) {
