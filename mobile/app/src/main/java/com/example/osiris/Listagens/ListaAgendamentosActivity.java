@@ -7,7 +7,9 @@ import android.os.Bundle;
 import com.example.osiris.Adapter.AdapterAgendamentos;
 import com.example.osiris.Cadastros.CadAgendamentosActivity;
 import com.example.osiris.Class.ApiConnection;
+import com.example.osiris.Class.ItemClickSupport;
 import com.example.osiris.Class.RecyclerItemClickListener;
+import com.example.osiris.Class.ShowToast;
 import com.example.osiris.Models.Agendamento;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -34,6 +36,8 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
     RecyclerView revListaAgendamentos;
     ArrayList<Agendamento> listaAgendamentos = new ArrayList<>();
     Context context;
+    Boolean aux = true;
+    String deviceId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,9 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_agendamentos);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        deviceId = intent.getStringExtra("deviceId");
 
         context = ListaAgendamentosActivity.this;
 
@@ -50,8 +57,9 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
         fabCadAgendamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent telaDescricao = new Intent(context, CadAgendamentosActivity.class);
-                startActivity(telaDescricao);
+                Intent cadastro = new Intent(context, CadAgendamentosActivity.class);
+                cadastro.putExtra("deviceId", deviceId);
+                startActivity(cadastro);
             }
         });
 
@@ -76,6 +84,25 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
             }
         });
 
+//        ItemClickSupport.addTo(revListaAgendamentos)
+//                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+//                        if (aux) {
+//                            Intent cadastro = new Intent(getApplicationContext(), CadAgendamentosActivity.class);
+//                            cadastro.putExtra("id", listaAgendamentos.get(position).getId());
+//                            cadastro.putExtra("deviceId", deviceId);
+//                            startActivity(cadastro);
+//                        }
+//                        aux = true;
+//                    }
+//
+//                    @Override
+//                    public void onItemDoubleClicked(RecyclerView recyclerView, int position, View v) {
+//                        Toast.makeText(context, "Você clicou duas vezes", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+
         //Adiciona evento de clique no recyclerview
         revListaAgendamentos.addOnItemTouchListener(
                 new RecyclerItemClickListener(
@@ -86,12 +113,17 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
                             public void onItemClick(View view, int position) {
                                 Intent cadastro = new Intent(getApplicationContext(), CadAgendamentosActivity.class);
                                 cadastro.putExtra("id", listaAgendamentos.get(position).getId());
+                                cadastro.putExtra("deviceId", deviceId);
                                 startActivity(cadastro);
                             }
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-                                Toast.makeText(context, "Você segurou o clique", Toast.LENGTH_SHORT).show();
+
+                                ApiConnection.makeDelete(ApiConnection.TABLE_SCHEDULE, listaAgendamentos.get(position).getId());
+                                ShowToast.showToast(context, "Agendamento das " + listaAgendamentos.get(position).getCron() + " excluído com sucesso!","i");
+                                //aux = false;
+                                atualizarAgendamentos();
                             }
 
                             @Override
@@ -136,7 +168,7 @@ public class ListaAgendamentosActivity extends AppCompatActivity {
 
 
         }catch (Exception ex){
-            Toast.makeText(context, "Erro ao buscar agendamentos", Toast.LENGTH_SHORT).show();
+            ShowToast.showToast(context, "Erro ao buscar agendamentos", "e");
         }
     }
 }

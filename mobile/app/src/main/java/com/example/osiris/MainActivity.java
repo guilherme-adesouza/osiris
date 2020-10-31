@@ -16,11 +16,16 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
+    String deviceId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        Intent intent = getIntent();
+        deviceId = intent.getStringExtra("deviceId");
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_agendamentos :
                 Intent agendamentos = new Intent(getApplicationContext(), ListaAgendamentosActivity.class);
-                //agendamentos.putExtra("deviceId", spiEquipamento.getSelectedItem().toString());
+                agendamentos.putExtra("deviceId", deviceId);
                 startActivity(agendamentos);
                 break;
         }

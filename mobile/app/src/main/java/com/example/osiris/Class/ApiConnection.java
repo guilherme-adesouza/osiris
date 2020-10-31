@@ -82,6 +82,41 @@ public class ApiConnection {
 
     }
 
+    public static JSONObject makeGetId(String[] parametersFixed, String from) {
+        StringBuilder result = new StringBuilder();
+        JSONObject json = null;
+        //Montar a URL
+        String dataUrlTemp = URL + from;
+        if (parametersFixed != null) {
+            for (int i = 0; i < parametersFixed.length; i++) {
+                dataUrlTemp += "/" + parametersFixed[i];
+            }
+        }
+
+        Log.i("URL DO GET => ", dataUrlTemp);
+        try {
+            //Estabelecer a conexão
+            URL url = new URL(dataUrlTemp);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            //Receber o resultado
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            //Montar o JSON
+            String st_json = result.toString();
+            json = new JSONObject(st_json);
+            Log.i("RETORNO BRUTO GET => ", st_json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return json;
+        }
+
+    }
+
     private static JSONObject make (String from, String indice, JSONObject jsonData, String method){
         URL myUrl;
         HttpURLConnection connection = null;
