@@ -4,64 +4,61 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.osiris.Models.Irrigacao;
+import com.example.osiris.Models.Dado;
 import com.example.osiris.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jamiltondamasceno
  */
 
-public class AdapterIrrigacoes extends RecyclerView.Adapter<AdapterIrrigacoes.MyViewHolder> {
+public class AdapterDados extends RecyclerView.Adapter<AdapterDados.MyViewHolder> {
 
-    private ArrayList<Irrigacao> irrigacoes;
+    private ArrayList<Dado> dados;
     private Context context;
 
-    public AdapterIrrigacoes(ArrayList<Irrigacao> irrigacoes, Context context) {
-        this.irrigacoes = irrigacoes;
+    public AdapterDados(ArrayList<Dado> dados, Context context) {
+        this.dados = dados;
         this.context = context;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_irrigacoes, parent, false);
+        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_dados, parent, false);
         return new MyViewHolder( item );
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        Irrigacao irrigacao = irrigacoes.get(position);
-        holder.hora.setText( irrigacao.getCron() );
-        holder.descricao.setText( irrigacao.getDescription() );
+        Dado dado = dados.get(position);
+        holder.luminosidade.setText("Luminosidade: " + dado.getLuminosity() );
+        holder.humidade.setText("Humidade: " + dado.getHumidity() );
 
     }
 
     @Override
     public int getItemCount() {
-        return irrigacoes.size();
+        return dados.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView hora;
-        TextView descricao;
+        TextView luminosidade;
+        TextView humidade;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            hora = itemView.findViewById(R.id.cron);
-            descricao  = itemView.findViewById(R.id.description);
+            luminosidade = itemView.findViewById(R.id.txtLuminosity);
+            humidade  = itemView.findViewById(R.id.txtHumidity);
 
         }
     }

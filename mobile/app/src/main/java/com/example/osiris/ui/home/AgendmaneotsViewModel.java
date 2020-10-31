@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class IrrigacoesViewModel extends ViewModel {
+public class AgendmaneotsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public IrrigacoesViewModel() {
+    public AgendmaneotsViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("Fragmento das irrigações");
 

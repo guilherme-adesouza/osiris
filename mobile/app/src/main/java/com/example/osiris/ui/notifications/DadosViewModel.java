@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class AgendamentoViewModel extends ViewModel {
+public class DadosViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public AgendamentoViewModel() {
+    public DadosViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("Fragmento dos Agendamentos");
     }

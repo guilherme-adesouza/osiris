@@ -5,14 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,21 +16,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/cron"
+                android:id="@+id/txtLuminosity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cronograma"
+                android:text="luminosity"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/txtHumidity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Descrição"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="humidity"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
         </LinearLayout>
-    </LinearLayout>
 </androidx.cardview.widget.CardView>
