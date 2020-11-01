@@ -10,15 +10,15 @@ public class ShowToast {
         try {
 
             if (tipo.equals("i")) { //info
-                Toasty.info(context, mensagem, Toast.LENGTH_LONG, true).show();
+                Toasty.info(context, mensagem, Toast.LENGTH_SHORT, true).show();
             } else if (tipo.equals("e")) { //erro
-                Toasty.error(context, mensagem, Toast.LENGTH_LONG, true).show();
+                Toasty.error(context, mensagem, Toast.LENGTH_SHORT, true).show();
             } else if (tipo.equals("a")) { //alerta
-                Toasty.warning(context, mensagem, Toast.LENGTH_LONG, true).show();
+                Toasty.warning(context, mensagem, Toast.LENGTH_SHORT, true).show();
             } else if (tipo.equals("i")) { //info
-                Toasty.info(context, mensagem, Toast.LENGTH_LONG, true).show();
+                Toasty.info(context, mensagem, Toast.LENGTH_SHORT, true).show();
             } else if (tipo.equals("s")) { //sucesso
-                Toasty.success(context, mensagem, Toast.LENGTH_LONG, true).show();
+                Toasty.success(context, mensagem, Toast.LENGTH_SHORT, true).show();
             }
 
         } catch (Exception ex) {

@@ -21,9 +21,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.osiris.Class.ApiConnection;
+import com.example.osiris.Class.ShowToast;
+import com.example.osiris.Models.Equipamento;
+import com.example.osiris.Models.Usuario;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView textEmail;
     TextView textPassword;
     Button btnAccess;
+    ArrayList<Usuario> listaUsuarios = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +49,69 @@ public class LoginActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        //referenciar componentes
+        textEmail = (TextView) findViewById(R.id.text_email);
+        textPassword = (TextView) findViewById(R.id.text_password);
+        btnAccess = (Button) findViewById(R.id.btn_access);
+
+        textEmail.setText("andersoncaye");
+        textPassword.setText("abc123");
+
         //teste do get
-        ApiConnection.makeGet(null, ApiConnection.TABLE_USER);
-/*
+
+        JSONArray usuarios = null;
+        try {
+            usuarios = ApiConnection.makeGet(null, ApiConnection.TABLE_USER);
+            for (int i = 0; i < usuarios.length(); i++) {
+                JSONObject jsonObject = usuarios.getJSONObject(i);
+                Usuario usu = new Usuario();
+
+                usu.setId(jsonObject.optString("id").toString());
+                usu.setLogin(jsonObject.optString("login").toString());
+                usu.setPassword(jsonObject.optString("password").toString());
+                listaUsuarios.add(usu) ;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        btnAccess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateAccess(textEmail.getText().toString(), textPassword.getText().toString())) {
+                    {
+                        ShowToast.showToast(getApplicationContext(), "Logado com sucesso!", "i");
+                        String token = "mytoken";
+                        startActivityHome(token);
+                    }
+                } else {
+                    ShowToast.showToast(getApplicationContext(), "Usuário ou senha incorretos!", "e");
+                }
+            }
+        });
+    }
+
+    private boolean validateAccess(String email, String password){
+        boolean access = false;
+
+        for (int i = 0; i < listaUsuarios.size(); i++) {
+            if (email.equals(listaUsuarios.get(i).getLogin()) && password.equals(listaUsuarios.get(i).getPassword())) {
+                access = true;
+            }
+        }
+        return access;
+    }
+
+    private void startActivityHome(String token){
+        Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
+        homeActivity.putExtra("token", token);
+        startActivity(homeActivity);
+        finish();
+    }
+
+    /*
         //teste do put
         JSONObject json = new JSONObject();
         String login = "elias 2";
@@ -62,42 +129,4 @@ public class LoginActivity extends AppCompatActivity {
         //teste delete
         ApiConnection.makeDelete(ApiConnection.TABLE_USER, "4");
 */
-
-        //referenciar componentes
-        textEmail = (TextView) findViewById(R.id.text_email);
-        textPassword = (TextView) findViewById(R.id.text_password);
-        btnAccess = (Button) findViewById(R.id.btn_access);
-
-        btnAccess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(
-                        validateAccess(
-                                textEmail.getText().toString(),
-                                textPassword.getText().toString()
-                        )
-                ){
-                    String token = "mytoken";
-                    startActivityHome(token);
-                }
-            }
-        });
-    }
-
-    private boolean validateAccess(String email, String password){
-        boolean access = false;
-
-        if ( true ) {
-            access = true;
-        }
-        //Log.e("RETORNO DO VALIDDATE", " ############################################ " + access);
-        return access;
-    }
-
-    private void startActivityHome(String token){
-        Intent homeActivity = new Intent(LoginActivity.this, HomeActivity.class);
-        homeActivity.putExtra("token", token);
-        startActivity(homeActivity);
-        finish();
-    }
 }
