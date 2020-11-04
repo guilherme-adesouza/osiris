@@ -25,4 +25,5 @@ public class Agendamento implements Serializable {
     public void setDescription(String description) { this.description = description; }
     public String getDeviceId() { return deviceId; }
     public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
+
 }

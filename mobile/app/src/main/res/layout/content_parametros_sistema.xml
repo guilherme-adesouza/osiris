@@ -7,37 +7,29 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
+
     <EditText
-        android:id="@+id/txtCadCron"
+        android:id="@+id/txtParamURL"
         android:layout_width="406dp"
         android:layout_height="51dp"
-        android:text="Hora"
+        android:text="URL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
         style="@style/TextOffBold"/>
 
-    <EditText
-        android:id="@+id/txtCadDescription"
-        android:layout_width="406dp"
-        android:layout_height="51dp"
-        android:text="Descricao"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtCadCron"
-        tools:ignore="MissingConstraints"
-        style="@style/TextOffBold"/>
 
     <Button
         android:id="@+id/btnAgendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agendar"
+        android:text="Alterar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtCadDescription"
+        app:layout_constraintTop_toBottomOf="@+id/txtParamURL"
         tools:ignore="MissingConstraints"
         />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
