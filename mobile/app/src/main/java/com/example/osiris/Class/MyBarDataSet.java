@@ -1,4 +1,4 @@
-package com.example.osiris;
+package com.example.osiris.Class;
 
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;

@@ -6,22 +6,22 @@
     app:startDestination="@+id/navigation_dados">
 
     <fragment
-        android:id="@+id/navigation_agendamentos"
-        android:name="com.example.osiris.ui.agendamentos.AgendamentosFragment"
-        android:label="@string/title_agendamentos"
-        tools:layout="@layout/fragment_agendamentos" />
-
-    <fragment
         android:id="@+id/navigation_dados"
         android:name="com.example.osiris.ui.dados.DadosFragment"
         android:label="@string/title_dados"
         tools:layout="@layout/fragment_dados" />
 
     <fragment
+        android:id="@+id/navigation_agendamentos"
+        android:name="com.example.osiris.ui.agendamentos.AgendamentosFragment"
+        android:label="@string/title_agendamentos"
+        tools:layout="@layout/fragment_agendamentos" />
+
+    <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.osiris.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dados" />
+        tools:layout="@layout/fragment_dashboard" />
 
 
 </navigation>
