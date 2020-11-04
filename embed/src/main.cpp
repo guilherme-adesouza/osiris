@@ -9,13 +9,12 @@
 #define CONFIG_PATH "/conf.txt"
 
 #define ANALOG_PIN A0
-#define WATER_HIGH_PIN D7
-#define WATER_LOW_PIN D6
 #define DHT_PIN D2
 #define MULTIPLEXER_PIN_S0 D0
 #define MULTIPLEXER_PIN_S1 D1
 #define MULTIPLEXER_PIN_S2 D3
-#define MOTOR_PIN D5
+#define MOTOR_PIN D6
+#define BUTTON_PIN D7
 
 #define MOTOR_OFF 0
 #define MOTOR_ON 1
@@ -34,14 +33,16 @@ String port = "8080";
 String ssid;
 String pass;
 
-int motorStatus = 0;
+int motorStatus = MOTOR_OFF;
 
 float temperature = 0;
 float humidity = 0;
 float luminosity = 0;
 float soil = 0;
-boolean waterHigh = false;
-boolean waterLow = false;
+float waterHigh = 0;
+float waterLow = 0;
+
+int dataTimer = 0;
 
 void serialConfig()
 {
@@ -134,6 +135,37 @@ void onRoot()
   webServer.send(200, "text/html", "<body><form style='display:inline-grid' action='/form' method='post'>ssid:<input type='text' name='ssid'>pass:<input type='text' name='pass'><button>Save</button></form></body>");
 }
 
+void onMotorON()
+{
+  motorStatus = MOTOR_ON;
+
+  webServer.send(200, "text/html", "on");
+}
+
+void onMotorOFF()
+{
+  motorStatus = MOTOR_OFF;
+
+  webServer.send(200, "text/html", "off");
+}
+
+ICACHE_RAM_ATTR
+void onButton()
+{
+  Serial.println("button!");
+
+  switch (motorStatus)
+  {
+  case MOTOR_OFF:
+    motorStatus = MOTOR_ON;
+    break;
+
+  case MOTOR_ON:
+    motorStatus = MOTOR_OFF;
+    break;
+  }
+}
+
 void multiplexerLdr()
 {
   digitalWrite(MULTIPLEXER_PIN_S0, HIGH);
@@ -145,6 +177,20 @@ void multiplexerSoil()
 {
   digitalWrite(MULTIPLEXER_PIN_S0, LOW);
   digitalWrite(MULTIPLEXER_PIN_S1, LOW);
+  digitalWrite(MULTIPLEXER_PIN_S2, LOW);
+}
+
+void multiplexerWaterHigh()
+{
+  digitalWrite(MULTIPLEXER_PIN_S0, LOW);
+  digitalWrite(MULTIPLEXER_PIN_S1, HIGH);
+  digitalWrite(MULTIPLEXER_PIN_S2, LOW);
+}
+
+void multiplexerWaterLow()
+{
+  digitalWrite(MULTIPLEXER_PIN_S0, HIGH);
+  digitalWrite(MULTIPLEXER_PIN_S1, HIGH);
   digitalWrite(MULTIPLEXER_PIN_S2, LOW);
 }
 
@@ -160,13 +206,20 @@ void handleSensors()
   humidity = hum.relative_humidity;
 
   multiplexerLdr();
+  delay(2);
   luminosity = analogRead(ANALOG_PIN);
 
   multiplexerSoil();
+  delay(2);
   soil = analogRead(ANALOG_PIN);
 
-  waterHigh = digitalRead(WATER_HIGH_PIN);
-  waterLow = digitalRead(WATER_LOW_PIN);
+  multiplexerWaterHigh();
+  delay(2);
+  waterHigh = analogRead(ANALOG_PIN);
+
+  multiplexerWaterLow();
+  delay(2);
+  waterLow = analogRead(ANALOG_PIN);
 
   HTTPClient http;
 
@@ -174,36 +227,49 @@ void handleSensors()
 
   http.addHeader("Content-Type", "application/json");
 
-  int code = http.POST("{\"temperature\": \"" + String(temperature) + "\","
-                       "\"humidity\": \"" + String(humidity) + "\","
-                       "\"luminosity\": \"" + String(luminosity) + "\","
-                       "\"soil\": \"" + String(soil) + "\","
-                       "\"waterHigh\": \"" + String(waterHigh) + "\","
-                       "\"waterLow\": \"" + String(waterLow) + "\"}");
+  String data = "{\"temperature\": \"" + String(temperature) + "\","
+                                                               "\"humidity\": \"" +
+                String(humidity) + "\","
+                                   "\"luminosity\": \"" +
+                String(luminosity) + "\","
+                                     "\"soil\": \"" +
+                String(soil) + "\","
+                               "\"waterHigh\": \"" +
+                String(waterHigh) + "\","
+                                    "\"waterLow\": \"" +
+                String(waterLow) + "\"}";
 
   http.end();
+
+  Serial.println(data);
 
   //Serial.println("code " + String(code) + " resp " + http.getString());
 }
 
-/*void handleMotor()
+void handleMotor()
 {
-  if( motorStatus == MOTOR_ON )
+  switch (motorStatus)
   {
-    digitalWrite(  )
+  case MOTOR_OFF:
+    digitalWrite(MOTOR_PIN, LOW);
+    break;
+
+  case MOTOR_ON:
+    digitalWrite(MOTOR_PIN, HIGH);
+    break;
   }
-}*/
+}
 
 void setup()
 {
   pinMode(ANALOG_PIN, INPUT);
-  pinMode(WATER_HIGH_PIN, INPUT);
-  pinMode(WATER_LOW_PIN, INPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT);
   pinMode(MULTIPLEXER_PIN_S0, OUTPUT);
   pinMode(MULTIPLEXER_PIN_S1, OUTPUT);
   pinMode(MULTIPLEXER_PIN_S2, OUTPUT);
-  pinMode( MOTOR_PIN, OUTPUT );
+  pinMode(MOTOR_PIN, OUTPUT);
+
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), onButton, FALLING);
 
   serialConfig();
 
@@ -211,38 +277,32 @@ void setup()
 
   loadConfig();
 
+  wifiConfig();
+
   dht.begin();
 
   webServer.on("/", onRoot);
   webServer.on("/form", HTTP_POST, onForm);
-  //webServer.on( "/motor", onMotor );
+  webServer.on("/motorON", onMotorON);
+  webServer.on("/motorOFF", onMotorOFF);
 
   webServer.begin();
-
-  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop()
 {
+  if (dataTimer >= 5000)
+  {
+    handleSensors();
+
+    dataTimer = 0;
+  }
+
   webServer.handleClient();
 
-  handleSensors();
+  handleMotor();
 
-  if( motorStatus == 1 )
-  {
-    motorStatus = 0;
+  dataTimer++;
 
-    digitalWrite( MOTOR_PIN, LOW );
-  }
-
-  else
-  {
-    motorStatus = 1;
-
-    digitalWrite( MOTOR_PIN, HIGH );
-  }
-
-  //handleMotor();
-
-  delay(1000);
+  delay(1);
 }
