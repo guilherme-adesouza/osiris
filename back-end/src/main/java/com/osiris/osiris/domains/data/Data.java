@@ -18,6 +18,12 @@ public class Data {
 
     private double luminosity;
     private double humidity;
+    private double temperature;
+    private double soil;
+    @Column(name = "water_high")
+    private boolean waterHigh;
+    @Column(name = "water_low")
+    private boolean waterLow;
 
     public long getId() {
         return id;
@@ -49,5 +55,37 @@ public class Data {
 
     public void setHumidity(double humidity) {
         this.humidity = humidity;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+    }
+
+    public double getSoil() {
+        return soil;
+    }
+
+    public void setSoil(double soil) {
+        this.soil = soil;
+    }
+
+    public boolean isWaterHigh() {
+        return waterHigh;
+    }
+
+    public void setWaterHigh(boolean waterHigh) {
+        this.waterHigh = waterHigh;
+    }
+
+    public boolean isWaterLow() {
+        return waterLow;
+    }
+
+    public void setWaterLow(boolean waterLow) {
+        this.waterLow = waterLow;
     }
 }

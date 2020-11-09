@@ -19,5 +19,9 @@ public class DataController extends BaseCRUDController<Data> {
         data.setDevice(request.getDevice());
         data.setHumidity(request.getHumidity());
         data.setLuminosity(request.getLuminosity());
+        data.setSoil(request.getSoil());
+        data.setTemperature(request.getTemperature());
+        data.setWaterHigh(request.isWaterHigh());
+        data.setWaterLow(request.isWaterLow());
     }
 }
