@@ -18,6 +18,7 @@
 
 #define MOTOR_OFF 0
 #define MOTOR_ON 1
+#define MOTOR_LOCK 3
 
 #define DHT_TYPE DHT11
 
@@ -43,6 +44,15 @@ float waterHigh = 0;
 float waterLow = 0;
 
 int dataTimer = 0;
+
+long lastSwitchTime = 0;
+int lastReading = LOW;
+long onTime = 0;
+int bounceTime = 50;
+int holdTime = 250;
+int doubleTime = 500;
+int hold = 0;
+int single = 0;
 
 void serialConfig()
 {
@@ -149,23 +159,6 @@ void onMotorOFF()
   webServer.send(200, "text/html", "off");
 }
 
-ICACHE_RAM_ATTR
-void onButton()
-{
-  Serial.println("button!");
-
-  switch (motorStatus)
-  {
-  case MOTOR_OFF:
-    motorStatus = MOTOR_ON;
-    break;
-
-  case MOTOR_ON:
-    motorStatus = MOTOR_OFF;
-    break;
-  }
-}
-
 void multiplexerLdr()
 {
   digitalWrite(MULTIPLEXER_PIN_S0, HIGH);
@@ -257,6 +250,94 @@ void handleMotor()
   case MOTOR_ON:
     digitalWrite(MOTOR_PIN, HIGH);
     break;
+
+  case MOTOR_LOCK:
+    digitalWrite(MOTOR_PIN, LOW);
+    break;
+  }
+}
+
+void onRelease()
+{
+
+  if ((millis() - lastSwitchTime) >= doubleTime)
+  {
+    single = 1;
+    lastSwitchTime = millis();
+    return;
+  }
+
+  if ((millis() - lastSwitchTime) < doubleTime)
+  {
+
+    if (motorStatus == MOTOR_LOCK)
+    {
+      motorStatus = MOTOR_OFF;
+    }
+
+    else
+    {
+      motorStatus = MOTOR_LOCK;
+    }
+
+    Serial.println("double press");
+    single = 0;
+    lastSwitchTime = millis();
+  }
+}
+
+void handleButton()
+{
+
+  int reading = digitalRead(BUTTON_PIN);
+
+  //first pressed
+  if (reading == HIGH && lastReading == LOW)
+  {
+    onTime = millis();
+  }
+
+  //held
+  if (reading == HIGH && lastReading == HIGH)
+  {
+    if ((millis() - onTime) > holdTime)
+    {
+      motorStatus = MOTOR_ON;
+      hold = 1;
+    }
+  }
+
+  //released
+  if (reading == LOW && lastReading == HIGH)
+  {
+    if (((millis() - onTime) > bounceTime) && hold != 1)
+    {
+      onRelease();
+    }
+    if (hold == 1)
+    {
+      Serial.println("held");
+      motorStatus = MOTOR_OFF;
+      hold = 0;
+    }
+  }
+  lastReading = reading;
+
+  if (single == 1 && (millis() - lastSwitchTime) > doubleTime)
+  {
+    Serial.println("single press");
+
+    if (motorStatus == MOTOR_OFF)
+    {
+      motorStatus = MOTOR_ON;
+    }
+
+    else
+    {
+      motorStatus = MOTOR_OFF;
+    }
+
+    single = 0;
   }
 }
 
@@ -268,8 +349,6 @@ void setup()
   pinMode(MULTIPLEXER_PIN_S1, OUTPUT);
   pinMode(MULTIPLEXER_PIN_S2, OUTPUT);
   pinMode(MOTOR_PIN, OUTPUT);
-
-  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), onButton, FALLING);
 
   serialConfig();
 
@@ -299,6 +378,8 @@ void loop()
   }
 
   webServer.handleClient();
+
+  handleButton();
 
   handleMotor();
 
