@@ -23,5 +23,6 @@ public class DataController extends BaseCRUDController<Data> {
         data.setTemperature(request.getTemperature());
         data.setWaterHigh(request.isWaterHigh());
         data.setWaterLow(request.isWaterLow());
+        data.setMotorStatus(request.getMotorStatus());
     }
 }

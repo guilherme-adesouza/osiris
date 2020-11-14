@@ -24,6 +24,8 @@ public class Data {
     private boolean waterHigh;
     @Column(name = "water_low")
     private boolean waterLow;
+    @Column(name = "motor_status")
+    private int motorStatus;
 
     public long getId() {
         return id;
@@ -87,5 +89,13 @@ public class Data {
 
     public void setWaterLow(boolean waterLow) {
         this.waterLow = waterLow;
+    }
+
+    public int getMotorStatus() {
+        return motorStatus;
+    }
+
+    public void setMotorStatus(int motorStatus) {
+        this.motorStatus = motorStatus;
     }
 }
