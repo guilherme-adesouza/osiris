@@ -5,6 +5,7 @@
 #include <DHT.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WebServer.h>
+#include <ArduinoJson.h>
 
 #define CONFIG_PATH "/conf.txt"
 
@@ -43,14 +44,14 @@ float soil = 0;
 float waterHigh = 0;
 float waterLow = 0;
 
-int dataTimer = 0;
+unsigned long lastSend = 0;
 
 long lastSwitchTime = 0;
 int lastReading = LOW;
 long onTime = 0;
-int bounceTime = 50;
-int holdTime = 250;
-int doubleTime = 500;
+unsigned int bounceTime = 50;
+unsigned int holdTime = 250;
+unsigned int doubleTime = 500;
 int hold = 0;
 int single = 0;
 
@@ -199,44 +200,45 @@ void handleSensors()
   humidity = hum.relative_humidity;
 
   multiplexerLdr();
-  delay(2);
   luminosity = analogRead(ANALOG_PIN);
 
   multiplexerSoil();
-  delay(2);
   soil = analogRead(ANALOG_PIN);
 
   multiplexerWaterHigh();
-  delay(2);
   waterHigh = analogRead(ANALOG_PIN);
 
   multiplexerWaterLow();
-  delay(2);
   waterLow = analogRead(ANALOG_PIN);
 
   HTTPClient http;
+  WiFiClient client;
+  String data;
 
-  http.begin("http://" + server + ":" + port + "/api/data");
+  StaticJsonDocument<200> json;
+
+  http.begin( "http://" + server + ":" + port + "/api/data");
 
   http.addHeader("Content-Type", "application/json");
 
-  String data = "{\"temperature\": \"" + String(temperature) + "\","
-                                                               "\"humidity\": \"" +
-                String(humidity) + "\","
-                                   "\"luminosity\": \"" +
-                String(luminosity) + "\","
-                                     "\"soil\": \"" +
-                String(soil) + "\","
-                               "\"waterHigh\": \"" +
-                String(waterHigh) + "\","
-                                    "\"waterLow\": \"" +
-                String(waterLow) + "\"}";
+  json["device"] = 1;
+  json["temperature"] = temperature;
+  json["humidity"] = humidity;
+  json["luminosity"] = luminosity;
+  json["soil"] = soil;
+  json["waterHigh"] = waterHigh;
+  json["waterLow"] = waterLow;
+  json["motorStatus"] = motorStatus;
+
+  serializeJson( json, data );
+
+  int code = http.POST( data );
 
   http.end();
 
   Serial.println(data);
 
-  //Serial.println("code " + String(code) + " resp " + http.getString());
+  Serial.println("code " + String(code) );
 }
 
 void handleMotor()
@@ -370,11 +372,11 @@ void setup()
 
 void loop()
 {
-  if (dataTimer >= 5000)
+  if (( millis() - lastSend ) > 10000 && WiFi.isConnected() )
   {
     handleSensors();
 
-    dataTimer = 0;
+    lastSend = millis();
   }
 
   webServer.handleClient();
@@ -382,8 +384,4 @@ void loop()
   handleButton();
 
   handleMotor();
-
-  dataTimer++;
-
-  delay(1);
 }

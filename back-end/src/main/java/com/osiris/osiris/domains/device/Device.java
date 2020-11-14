@@ -16,6 +16,10 @@ public class Device {
     @Column(name = "display_name")
     private String displayName;
 
+    public Device( int id ){
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
