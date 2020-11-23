@@ -37,12 +37,14 @@ String pass;
 
 int motorStatus = MOTOR_OFF;
 
+boolean led = true;
+
 float temperature = 0;
 float humidity = 0;
 float luminosity = 0;
 float soil = 0;
-float waterHigh = 0;
-float waterLow = 0;
+boolean waterHigh = 0;
+boolean waterLow = 0;
 
 unsigned long lastSend = 0;
 
@@ -203,13 +205,13 @@ void handleSensors()
   luminosity = analogRead(ANALOG_PIN);
 
   multiplexerSoil();
-  soil = analogRead(ANALOG_PIN);
+  soil = map( analogRead(ANALOG_PIN), 1024, 0, 0, 100 );
 
   multiplexerWaterHigh();
-  waterHigh = analogRead(ANALOG_PIN);
+  waterHigh = analogRead(ANALOG_PIN) > 512 ? true : false;
 
   multiplexerWaterLow();
-  waterLow = analogRead(ANALOG_PIN);
+  waterLow = analogRead(ANALOG_PIN) > 512 ? true : false;
 
   HTTPClient http;
   WiFiClient client;
@@ -345,6 +347,7 @@ void handleButton()
 
 void setup()
 {
+  pinMode( LED_BUILTIN, OUTPUT );
   pinMode(ANALOG_PIN, INPUT);
   pinMode(BUTTON_PIN, INPUT);
   pinMode(MULTIPLEXER_PIN_S0, OUTPUT);
@@ -384,4 +387,6 @@ void loop()
   handleButton();
 
   handleMotor();
+
+  digitalWrite( LED_BUILTIN, led == true ? LOW : HIGH );
 }
