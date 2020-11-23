@@ -66,7 +66,8 @@ Abaixo segue a estrutura em que os endpoints estarão disponíveis:
 ```json
 {
   "macAddress": "A4-CE-28-D7-8D-1D",
-  "displayName": "Meu exemplo de dispositivo"
+  "displayName": "Meu exemplo de dispositivo",
+  "motorStatus": false
 } 
 ```
 
@@ -90,7 +91,11 @@ Abaixo segue a estrutura em que os endpoints estarão disponíveis:
         "id": 1
     },
     "luminosity": 50,
-    "humidity": 10
+    "humidity": 10,
+    "soil": 10,
+    "waterHigh": false,
+    "waterLow": false,
+    "motorStatus": 1
 }
 ```
 

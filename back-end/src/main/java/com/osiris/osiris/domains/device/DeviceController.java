@@ -18,5 +18,6 @@ public class DeviceController extends BaseCRUDController<Device> {
     public void applyChanges(Device device, Device request) {
         device.setDisplayName(request.getDisplayName());
         device.setMacAddress(request.getMacAddress());
+        device.setMotorStatus(request.isMotorStatus());
     }
 }

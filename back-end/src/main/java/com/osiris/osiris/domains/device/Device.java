@@ -16,6 +16,9 @@ public class Device {
     @Column(name = "display_name")
     private String displayName;
 
+    @Column(name = "motor_status")
+    private boolean motorStatus;
+
     public Device( int id ){
         this.id = id;
     }
@@ -42,5 +45,13 @@ public class Device {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public boolean isMotorStatus() {
+        return motorStatus;
+    }
+
+    public void setMotorStatus(boolean motorStatus) {
+        this.motorStatus = motorStatus;
     }
 }
