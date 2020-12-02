@@ -28,7 +28,7 @@ import java.net.URL;
 
 public class ApiConnection {
 
-    private final static String URL             = "http://10.0.2.2:8080/api/";
+    private final static String URL             = "http://192.168.0.100:8080/api/";
     public final static String TABLE_ACTION     = "action";
     public final static String TABLE_DATA       = "data";
     public final static String TABLE_DEVICE     = "device";

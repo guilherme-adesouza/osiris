@@ -23,6 +23,16 @@ public class Device {
         this.id = id;
     }
 
+    public Device(long id, String macAddress, String displayName, boolean motorStatus) {
+        this.id = id;
+        this.macAddress = macAddress;
+        this.displayName = displayName;
+        this.motorStatus = motorStatus;
+    }
+
+    public Device(){
+    }
+
     public long getId() {
         return id;
     }

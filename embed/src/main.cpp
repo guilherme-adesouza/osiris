@@ -205,7 +205,7 @@ void handleSensors()
   luminosity = analogRead(ANALOG_PIN);
 
   multiplexerSoil();
-  soil = map( analogRead(ANALOG_PIN), 1024, 0, 0, 100 );
+  soil = map(analogRead(ANALOG_PIN), 1024, 0, 0, 100);
 
   multiplexerWaterHigh();
   waterHigh = analogRead(ANALOG_PIN) > 512 ? true : false;
@@ -219,7 +219,7 @@ void handleSensors()
 
   StaticJsonDocument<200> json;
 
-  http.begin( "http://" + server + ":" + port + "/api/data");
+  http.begin("http://" + server + ":" + port + "/api/data");
 
   http.addHeader("Content-Type", "application/json");
 
@@ -232,15 +232,20 @@ void handleSensors()
   json["waterLow"] = waterLow;
   json["motorStatus"] = motorStatus;
 
-  serializeJson( json, data );
+  serializeJson(json, data);
 
-  int code = http.POST( data );
+  int code = http.POST(data);
 
   http.end();
 
   Serial.println(data);
 
-  Serial.println("code " + String(code) );
+  Serial.println("code " + String(code));
+
+  if (code == 200)
+  {
+    Serial.println("resp " + http.getString());
+  }
 }
 
 void handleMotor()
@@ -347,7 +352,7 @@ void handleButton()
 
 void setup()
 {
-  pinMode( LED_BUILTIN, OUTPUT );
+  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(ANALOG_PIN, INPUT);
   pinMode(BUTTON_PIN, INPUT);
   pinMode(MULTIPLEXER_PIN_S0, OUTPUT);
@@ -375,7 +380,7 @@ void setup()
 
 void loop()
 {
-  if (( millis() - lastSend ) > 10000 && WiFi.isConnected() )
+  if ((millis() - lastSend) > 10000 && WiFi.isConnected())
   {
     handleSensors();
 
@@ -388,5 +393,5 @@ void loop()
 
   handleMotor();
 
-  digitalWrite( LED_BUILTIN, led == true ? LOW : HIGH );
+  digitalWrite(LED_BUILTIN, led == true ? LOW : HIGH);
 }
